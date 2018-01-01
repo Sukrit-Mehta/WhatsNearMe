@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context="sukrit.example.com.nearme.Activities.MainActivity">
 
     <Button
@@ -18,7 +19,8 @@
     <GridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="auto_fit"
+        android:id="@+id/gridView"
+        android:numColumns="3"
         android:columnWidth="90dp"
         android:gravity="center"
         android:stretchMode="columnWidth">

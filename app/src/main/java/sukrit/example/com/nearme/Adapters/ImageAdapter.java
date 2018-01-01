@@ -18,14 +18,7 @@ public class ImageAdapter extends BaseAdapter {
 
     // Keep all Images in array
     public Integer[] mThumbIds = {
-            R.drawable.pic_1, R.drawable.pic_2,
-            R.drawable.pic_3, R.drawable.pic_4,
-            R.drawable.pic_5, R.drawable.pic_6,
-            R.drawable.pic_7, R.drawable.pic_8,
-            R.drawable.pic_9, R.drawable.pic_10,
-            R.drawable.pic_11, R.drawable.pic_12,
-            R.drawable.pic_13, R.drawable.pic_14,
-            R.drawable.pic_15
+           R.drawable.atm_machine,R.drawable.bus_stop,R.drawable.mastercard,R.drawable.hotel,R.drawable.pharmacy,R.drawable.theater
     };
 
     // Constructor
@@ -53,7 +46,8 @@ public class ImageAdapter extends BaseAdapter {
         ImageView imageView = new ImageView(mContext);
         imageView.setImageResource(mThumbIds[position]);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setLayoutParams(new GridView.LayoutParams(70, 70));
+        imageView.setLayoutParams(new GridView.LayoutParams(170, 170));
+        
         return imageView;
     }
 

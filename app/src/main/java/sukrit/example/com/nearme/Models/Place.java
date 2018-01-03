@@ -8,18 +8,15 @@ public class Place {
     String name;
     String vicinity;
     Double rating;
-    String icon;
-    Boolean openNowStatus;
+    //Boolean openNowStatus;
 
     public Place() {
     }
 
-    public Place(String name, String vicinity, Double rating, String icon,  Boolean openNowStatus) {
+    public Place(String name, String vicinity, Double rating) {
         this.name = name;
         this.vicinity = vicinity;
         this.rating = rating;
-        this.icon = icon;
-        this.openNowStatus = openNowStatus;
     }
 
     public String getName() {
@@ -46,19 +43,4 @@ public class Place {
         this.rating = rating;
     }
 
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public Boolean getOpenNowStatus() {
-        return openNowStatus;
-    }
-
-    public void setOpenNowStatus(Boolean openNowStatus) {
-        this.openNowStatus = openNowStatus;
-    }
 }

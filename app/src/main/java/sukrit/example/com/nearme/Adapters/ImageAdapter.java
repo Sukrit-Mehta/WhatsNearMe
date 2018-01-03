@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import sukrit.example.com.nearme.R;
 
@@ -17,6 +18,10 @@ public class ImageAdapter extends BaseAdapter {
     private Context mContext;
 
     // Keep all Images in array
+    public String[] tags = {
+        "ATM", "BUS", "MASTERCARD", "HOTEL", "PHARMACY", "THEATER"
+    };
+
     public Integer[] mThumbIds = {
            R.drawable.atm_machine,R.drawable.bus_stop,R.drawable.mastercard,R.drawable.hotel,R.drawable.pharmacy,R.drawable.theater
     };
@@ -43,10 +48,18 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView = new ImageView(mContext);
+        final ImageView imageView = new ImageView(mContext);
         imageView.setImageResource(mThumbIds[position]);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setLayoutParams(new GridView.LayoutParams(170, 170));
+        imageView.setTag(tags[position]);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext, imageView.getTag().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
         
         return imageView;
     }

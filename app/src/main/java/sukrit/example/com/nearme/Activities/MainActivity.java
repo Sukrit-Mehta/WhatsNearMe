@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import sukrit.example.com.nearme.Adapters.ImageAdapter;
 import sukrit.example.com.nearme.R;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(MainActivity.this, findViewById(R.id.button2).getTag().toString(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, Main2Activity.class);
                 startActivity(intent);
             }

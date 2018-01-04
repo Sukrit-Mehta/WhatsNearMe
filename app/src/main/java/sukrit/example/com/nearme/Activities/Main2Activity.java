@@ -1,11 +1,15 @@
 package sukrit.example.com.nearme.Activities;
 
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,19 +35,23 @@ public class Main2Activity extends AppCompatActivity {
     ArrayList<Place> arrayList = new ArrayList<>();
     ArrayList<Place> jsonArray1 = new ArrayList<>();
 
-
     public static final String TAG="TTT";
     String url="";
+    String tagValue="";
+    ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        tagValue = getIntent().getStringExtra("tagValue");
         mRecyclerView = findViewById(R.id.recyclerView);
+        progressDialog = new ProgressDialog(Main2Activity.this);
 
         DownloadData downloadData=new DownloadData();
-        downloadData.execute(url);
+        downloadData.execute(url,tagValue);
 
         Log.d(TAG, "array List : "+arrayList);
 
@@ -61,7 +69,7 @@ public class Main2Activity extends AppCompatActivity {
             URL url1 = null;
             try {
                 Log.d(TAG, "doInBackground: params[0]"+params[0]);
-                url1=new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=28.6305,77.3721&radius=1000&type=restaurant&sensor=true&key=AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
+                url1=new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=28.6305,77.3721&radius=1000&type="+params[1]+"&sensor=true&key=AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -103,12 +111,17 @@ public class Main2Activity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             Log.d(TAG, "onPreExecute: ");
+            progressDialog.setMessage("Please wait...");
+            mRecyclerView.setVisibility(View.INVISIBLE);
+            progressDialog.show();
         }
 
         @Override
         protected void onPostExecute(ArrayList<Place> jsonArray) {
             super.onPostExecute(jsonArray);
 
+            mRecyclerView.setVisibility(View.VISIBLE);
+            progressDialog.dismiss();
             Log.d(TAG, "onPostExecute: "+jsonArray.size());
 
             int i;
@@ -133,7 +146,28 @@ public class Main2Activity extends AppCompatActivity {
                     String name = jsonArray.getJSONObject(i).getString("name");
                     String vicinity = jsonArray.getJSONObject(i).getString("vicinity");
                     Double rating = jsonArray.getJSONObject(i).getDouble("rating");
-                    //String icon = jsonArray.getJSONObject(0).getString("icon");
+                    String photo_reference ;
+                    if(jsonArray.getJSONObject(i).has("photos")) {
+                        photo_reference = jsonArray.getJSONObject(i).getJSONArray("photos").getJSONObject(0)
+                                .getString("photo_reference");
+                    }
+                    else {
+                        photo_reference="CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU";
+                    }
+                    Boolean openNow;
+                    if(jsonArray.getJSONObject(i).has("opening_hours")) {
+                        if(jsonArray.getJSONObject(i).getJSONObject("opening_hours").getBoolean("open_now")==true) {
+                            openNow = true;
+                        }
+                        else {
+                            openNow = false;
+                        }
+                    }
+                    else {
+                        openNow = false;
+                    }
+                    URL url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=140&maxheight=140&photoreference="+photo_reference+"&key="+"AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
+                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
                     if(name==null)
                     {
@@ -147,17 +181,12 @@ public class Main2Activity extends AppCompatActivity {
                     {
                         rating = 10.0;
                     }
-                 /*   if(icon==null)
+                    if(openNow==null)
                     {
-                        icon = "default Icon";
-                    }*/
+                        openNow = true;
+                    }
 
-
-                    Place p = new Place(name,vicinity,rating);
-//                Log.d(TAG, "getJson: "+jsonArray.getJSONObject(0).getString("name"));
-//                Log.d(TAG, "getJson: "+jsonArray.getJSONObject(0).getString("vicinity"));
-//                Log.d(TAG, "getJson: "+jsonArray.getJSONObject(0).getDouble("rating"));
-//                Log.d(TAG, "getJson: "+jsonArray.getJSONObject(0).getString("icon"));
+                    Place p = new Place(name,vicinity,rating,bmp,openNow);
                     placeArrayList.add(p);
                 }
                 Log.d(TAG, "getJson: "+placeArrayList);

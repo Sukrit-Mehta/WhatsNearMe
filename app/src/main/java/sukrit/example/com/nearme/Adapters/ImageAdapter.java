@@ -5,13 +5,14 @@ package sukrit.example.com.nearme.Adapters;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import sukrit.example.com.nearme.Activities.Main2Activity;
 import sukrit.example.com.nearme.R;
 
 public class ImageAdapter extends BaseAdapter {
@@ -19,7 +20,7 @@ public class ImageAdapter extends BaseAdapter {
 
     // Keep all Images in array
     public String[] tags = {
-        "ATM", "BUS", "MASTERCARD", "HOTEL", "PHARMACY", "THEATER"
+        "atm", "bus_station", "bank", "restaurant", "pharmacy", "movie_theater"
     };
 
     public Integer[] mThumbIds = {
@@ -57,7 +58,9 @@ public class ImageAdapter extends BaseAdapter {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, imageView.getTag().toString(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, Main2Activity.class);
+                intent.putExtra("tagValue",imageView.getTag().toString());
+                mContext.startActivity(intent);
             }
         });
         

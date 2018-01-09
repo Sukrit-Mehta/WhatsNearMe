@@ -12,16 +12,20 @@ public class Place {
     Double rating;
     Bitmap bitmap;
     Boolean openNow;
+    Double lat;
+    Double lng;
 
     public Place() {
     }
 
-    public Place(String name, String vicinity, Double rating, Bitmap bitmap, Boolean openNow) {
+    public Place(String name, String vicinity, Double rating, Bitmap bitmap, Boolean openNow, Double lat, Double lng) {
         this.name = name;
         this.vicinity = vicinity;
         this.rating = rating;
         this.bitmap = bitmap;
         this.openNow = openNow;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public String getName() {
@@ -62,5 +66,22 @@ public class Place {
 
     public void setOpenNow(Boolean openNow) {
         this.openNow = openNow;
+    }
+
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
     }
 }

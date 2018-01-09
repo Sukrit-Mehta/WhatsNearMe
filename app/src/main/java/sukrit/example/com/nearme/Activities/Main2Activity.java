@@ -40,6 +40,7 @@ public class Main2Activity extends AppCompatActivity {
     String tagValue="";
     ProgressDialog progressDialog;
 
+    LinearLayoutManager llm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +54,12 @@ public class Main2Activity extends AppCompatActivity {
         DownloadData downloadData=new DownloadData();
         downloadData.execute(url,tagValue);
 
-        Log.d(TAG, "array List : "+arrayList);
+        llm = new LinearLayoutManager(Main2Activity.this);
 
         placeNameAdapter = new PlaceNameAdapter(arrayList,Main2Activity.this);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(Main2Activity.this));
+        mRecyclerView.setLayoutManager(llm);
         mRecyclerView.setAdapter(placeNameAdapter);
+
     }
 
     public class DownloadData extends AsyncTask<String,Void,ArrayList<Place>>
@@ -111,17 +113,19 @@ public class Main2Activity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             Log.d(TAG, "onPreExecute: ");
-            progressDialog.setMessage("Please wait...");
-            mRecyclerView.setVisibility(View.INVISIBLE);
-            progressDialog.show();
+                progressDialog.setMessage("Please wait...");
+                mRecyclerView.setVisibility(View.INVISIBLE);
+                progressDialog.show();
         }
 
         @Override
         protected void onPostExecute(ArrayList<Place> jsonArray) {
             super.onPostExecute(jsonArray);
 
-            mRecyclerView.setVisibility(View.VISIBLE);
             progressDialog.dismiss();
+
+            mRecyclerView.setVisibility(View.VISIBLE);
+//            progressDialog.dismiss();
             Log.d(TAG, "onPostExecute: "+jsonArray.size());
 
             int i;
@@ -146,6 +150,10 @@ public class Main2Activity extends AppCompatActivity {
                     String name = jsonArray.getJSONObject(i).getString("name");
                     String vicinity = jsonArray.getJSONObject(i).getString("vicinity");
                     Double rating = jsonArray.getJSONObject(i).getDouble("rating");
+                    Double longitude = jsonArray.getJSONObject(i).getJSONObject("geometry")
+                            .getJSONObject("location").getDouble("lng");
+                    Double latitude = jsonArray.getJSONObject(i).getJSONObject("geometry")
+                            .getJSONObject("location").getDouble("lat");
                     String photo_reference ;
                     if(jsonArray.getJSONObject(i).has("photos")) {
                         photo_reference = jsonArray.getJSONObject(i).getJSONArray("photos").getJSONObject(0)
@@ -186,7 +194,7 @@ public class Main2Activity extends AppCompatActivity {
                         openNow = true;
                     }
 
-                    Place p = new Place(name,vicinity,rating,bmp,openNow);
+                    Place p = new Place(name,vicinity,rating,bmp,openNow,latitude,longitude);
                     placeArrayList.add(p);
                 }
                 Log.d(TAG, "getJson: "+placeArrayList);

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">NearMe</string>
     <string name="title_activity_maps">NearMe</string>
+    <string name="title_activity_route_maps">Map</string>
 </resources>

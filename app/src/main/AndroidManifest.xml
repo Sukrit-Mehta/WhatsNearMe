@@ -16,12 +16,12 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:hardwareAccelerated="false"
-        android:largeHeap="true"
         android:theme="@style/AppTheme">
 
         <!--
@@ -48,21 +48,33 @@
             </intent-filter>
             -->
         </activity>
-        <activity android:name=".Activities.MainActivity">
+        <activity android:name=".Activities.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.Main2Activity">
+        <activity android:name=".Activities.PlacesListActivity"
+            android:parentActivityName=".Activities.HomeActivity">
 
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
+
+        </activity>
+        <activity
+            android:name=".Activities.RouteMapsActivity"
+            android:label="@string/title_activity_route_maps">
             <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>-->
-
         </activity>
     </application>
 

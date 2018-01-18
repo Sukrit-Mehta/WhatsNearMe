@@ -8,8 +8,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,12 +28,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import sukrit.example.com.nearme.Adapters.PlaceNameAdapter;
 import sukrit.example.com.nearme.Models.Place;
 import sukrit.example.com.nearme.R;
 
-public class Main2Activity extends AppCompatActivity {
+public class PlacesListActivity extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
     PlaceNameAdapter placeNameAdapter;
@@ -35,30 +42,107 @@ public class Main2Activity extends AppCompatActivity {
     ArrayList<Place> arrayList = new ArrayList<>();
     ArrayList<Place> jsonArray1 = new ArrayList<>();
 
-    public static final String TAG="TTT";
     String url="";
     String tagValue="";
     ProgressDialog progressDialog;
 
     LinearLayoutManager llm;
+    public static final String TAG = "locationsettings";
+
+    Double myLat,myLong;
+    Toolbar mToolbar;
+
+    Spinner spinner;
+    TextView placeType;
+    SearchView searchView;
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_places_list);
+
+        mToolbar=findViewById(R.id.places_app_bar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("Near Me");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        searchView=findViewById(R.id.searchView);
+
+        placeType=findViewById(R.id.placeType);
+
+        spinner = findViewById(R.id.sortSpinner);
+
+        List<String> categories = new ArrayList<String>();
+        categories.add("Distance");
+        categories.add("Ratings");
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(dataAdapter);
+
+        myLat= HomeActivity.latitude;
+        myLong= HomeActivity.longitude;
 
         tagValue = getIntent().getStringExtra("tagValue");
+        placeType.setText(tagValue);
+
         mRecyclerView = findViewById(R.id.recyclerView);
-        progressDialog = new ProgressDialog(Main2Activity.this);
+        progressDialog = new ProgressDialog(PlacesListActivity.this);
 
         DownloadData downloadData=new DownloadData();
         downloadData.execute(url,tagValue);
 
-        llm = new LinearLayoutManager(Main2Activity.this);
+        llm = new LinearLayoutManager(PlacesListActivity.this);
 
-        placeNameAdapter = new PlaceNameAdapter(arrayList,Main2Activity.this);
+        placeNameAdapter = new PlaceNameAdapter(arrayList,PlacesListActivity.this);
         mRecyclerView.setLayoutManager(llm);
         mRecyclerView.setAdapter(placeNameAdapter);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText!=null && !newText.isEmpty() &&arrayList.size()>0)
+                {
+                    ArrayList<Place> filteredArrayList = new ArrayList<>();
+                    for(int i=0;i<arrayList.size();i++)
+                    {
+                        if(arrayList.get(i).getName().toLowerCase().contains(newText.toLowerCase()) ||
+                                arrayList.get(i).getVicinity().toLowerCase().contains(newText.toLowerCase()))
+                        {
+                            filteredArrayList.add(arrayList.get(i));
+                        }
+                    }
+                    mRecyclerView.setAdapter(new PlaceNameAdapter(filteredArrayList,PlacesListActivity.this));
+                }
+                else {
+                    mRecyclerView.setAdapter(new PlaceNameAdapter(arrayList,PlacesListActivity.this));
+                }
+                return true;
+            }
+        });
+
+
 
     }
 
@@ -71,7 +155,8 @@ public class Main2Activity extends AppCompatActivity {
             URL url1 = null;
             try {
                 Log.d(TAG, "doInBackground: params[0]"+params[0]);
-                url1=new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=28.6305,77.3721&radius=1000&type="+params[1]+"&sensor=true&key=AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
+                //url1=new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=28.6305,77.3721&radius=1000&type="+params[1]+"&sensor=true&key=AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
+                url1=new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+myLat+","+myLong+"&radius=5000&type="+params[1]+"&sensor=true&key=AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -107,7 +192,6 @@ public class Main2Activity extends AppCompatActivity {
 
             return jsonArray1;
         }
-
 
         @Override
         protected void onPreExecute() {
@@ -194,7 +278,7 @@ public class Main2Activity extends AppCompatActivity {
                         openNow = true;
                     }
 
-                    Place p = new Place(name,vicinity,rating,bmp,openNow,latitude,longitude);
+                    Place p = new Place(name,vicinity,rating,bmp,openNow,latitude,longitude,myLat,myLong);
                     placeArrayList.add(p);
                 }
                 Log.d(TAG, "getJson: "+placeArrayList);

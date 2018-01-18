@@ -5,17 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context="sukrit.example.com.nearme.Activities.MainActivity">
+    tools:context="sukrit.example.com.nearme.Activities.HomeActivity">
+
+    <include layout="@layout/app_bar_layout" android:id="@+id/main_app_bar"/>
 
     <GridView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/gridView"
+        android:layout_below="@+id/main_app_bar"
         android:numColumns="3"
         android:columnWidth="90dp"
         android:gravity="center"
         android:stretchMode="columnWidth">
 
     </GridView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/text"
+        android:text="coordinates"/>
 
 </RelativeLayout>

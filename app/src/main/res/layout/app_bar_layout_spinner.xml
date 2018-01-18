@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_app_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:titleTextColor="@android:color/white"
+    android:background="@color/colorPrimary"
+
+    android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sortSpinner"
+        android:layout_alignParentEnd="true"
+        android:pointerIcon="alias"
+        android:layout_marginRight="16dp"></Spinner>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/sortSpinner"
+            android:text="Sort By:"
+            android:textStyle="normal"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/placeType"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textSize="17sp"
+            android:maxEms="4"/>
+    </RelativeLayout>
+
+</android.support.v7.widget.Toolbar>

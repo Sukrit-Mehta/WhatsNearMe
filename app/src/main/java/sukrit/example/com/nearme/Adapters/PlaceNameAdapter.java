@@ -1,6 +1,7 @@
 package sukrit.example.com.nearme.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import sukrit.example.com.nearme.Activities.RouteMapsActivity;
 import sukrit.example.com.nearme.Models.Place;
 import sukrit.example.com.nearme.R;
 import sukrit.example.com.nearme.Utils.CommonMethods;
@@ -42,18 +44,30 @@ public class PlaceNameAdapter extends RecyclerView.Adapter<PlaceNameAdapter.Deta
     }
 
     @Override
-    public void onBindViewHolder(DetailsItemHolder holder, int position) {
+    public void onBindViewHolder(final DetailsItemHolder holder, final int position) {
         Place place = placeArrayList.get(position);
         holder.tvName.setText(place.getName());
         holder.tvAddress.setText(place.getVicinity());
         holder.ivPlaceImage.setImageBitmap(place.getBitmap());
         holder.ratingBar.setRating(place.getRating().floatValue());
         holder.tvOpenNow.setText(String.valueOf(place.getOpenNow()));
-        Double dist = CommonMethods.getDistance(28.6305,77.3721,place.getLat(),place.getLng(),"K");
+        Double dist = CommonMethods.getDistance(place.getMyLat(),place.getMyLong(),place.getLat(),place.getLng(),"K");
         Double dist1 = Double.valueOf(Math.round(dist * 100));
         dist1 = dist1 / 100;
         Double d = dist1;
         holder.btnDistance.setText(d+" Kms");
+
+        holder.btnDistance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent =new Intent(context,RouteMapsActivity.class);
+                intent.putExtra("myLat",placeArrayList.get(position).getMyLat());
+                intent.putExtra("myLong",placeArrayList.get(position).getMyLong());
+                intent.putExtra("placeLat",placeArrayList.get(position).getLat());
+                intent.putExtra("placeLong",placeArrayList.get(position).getLng());
+                context.startActivity(intent);
+            }
+        });
 
     }
 
@@ -61,7 +75,6 @@ public class PlaceNameAdapter extends RecyclerView.Adapter<PlaceNameAdapter.Deta
     public int getItemCount() {
         return placeArrayList.size();
     }
-
 
     @Override
     public int getItemViewType(int position) {
@@ -89,5 +102,6 @@ public class PlaceNameAdapter extends RecyclerView.Adapter<PlaceNameAdapter.Deta
             btnDistance = itemView.findViewById(R.id.btnDistance);
             testView = itemView;
         }
+
     }
 }

@@ -26,7 +26,8 @@ public class ImageAdapter extends BaseAdapter {
     };
 
     public Integer[] mThumbIds = {
-           R.drawable.atm_machine,R.drawable.bus_stop,R.drawable.train,R.drawable.taxi,R.drawable.airport,R.drawable.mastercard,R.drawable.hotel,R.drawable.pharmacy,R.drawable.theater
+           R.drawable.atm_machine,R.drawable.bus_stop,R.drawable.train, R.drawable.taxi,R.drawable.airport,
+            R.drawable.mastercard,R.drawable.restaurant,R.drawable.pharmacy,R.drawable.theater
             ,R.drawable.doctor,R.drawable.electrician,R.drawable.plumber,R.drawable.police,R.drawable.mall,
             R.drawable.post_office,R.drawable.stadium,R.drawable.temple,R.drawable.parking,R.drawable.car_wash,
             R.drawable.laundry,R.drawable.hair_salon

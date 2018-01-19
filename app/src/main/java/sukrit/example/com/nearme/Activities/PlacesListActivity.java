@@ -49,7 +49,7 @@ public class PlacesListActivity extends AppCompatActivity {
     LinearLayoutManager llm;
     public static final String TAG = "locationsettings";
 
-    Double myLat,myLong;
+    double myLat,myLong;
     Toolbar mToolbar;
 
     Spinner spinner;
@@ -233,7 +233,14 @@ public class PlacesListActivity extends AppCompatActivity {
                 for(int i=0;i<jsonArray.length();i++) {
                     String name = jsonArray.getJSONObject(i).getString("name");
                     String vicinity = jsonArray.getJSONObject(i).getString("vicinity");
-                    Double rating = jsonArray.getJSONObject(i).getDouble("rating");
+                    Double rating=0.0;
+                    if(jsonArray.getJSONObject(i).has("rating")) {
+                         rating = jsonArray.getJSONObject(i).getDouble("rating");
+                    }
+                    else
+                    {
+                        rating=5.0;
+                    }
                     Double longitude = jsonArray.getJSONObject(i).getJSONObject("geometry")
                             .getJSONObject("location").getDouble("lng");
                     Double latitude = jsonArray.getJSONObject(i).getJSONObject("geometry")
@@ -259,8 +266,12 @@ public class PlacesListActivity extends AppCompatActivity {
                         openNow = false;
                     }
                     URL url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=140&maxheight=140&photoreference="+photo_reference+"&key="+"AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-
+                    Bitmap bmp=null;
+                   try {
+                        bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                   }catch (Exception e) {
+                       Log.d(TAG, "Exception "+e);
+                   }
                     if(name==null)
                     {
                         name = "default Name";
@@ -278,7 +289,7 @@ public class PlacesListActivity extends AppCompatActivity {
                         openNow = true;
                     }
 
-                    Place p = new Place(name,vicinity,rating,bmp,openNow,latitude,longitude,myLat,myLong);
+                    Place p = new Place(name,vicinity,rating,bmp,openNow,latitude,longitude,myLat,myLong,tagValue);
                     placeArrayList.add(p);
                 }
                 Log.d(TAG, "getJson: "+placeArrayList);

@@ -16,11 +16,12 @@ public class Place {
     Double lng;
     Double myLat;
     Double myLong;
+    String placeType;
 
     public Place() {
     }
 
-    public Place(String name, String vicinity, Double rating, Bitmap bitmap, Boolean openNow, Double lat, Double lng,Double myLat,Double myLong) {
+    public Place(String name, String vicinity, Double rating, Bitmap bitmap, Boolean openNow, Double lat, Double lng,Double myLat,Double myLong, String placeType) {
         this.name = name;
         this.vicinity = vicinity;
         this.rating = rating;
@@ -30,6 +31,7 @@ public class Place {
         this.lng = lng;
         this.myLat = myLat;
         this.myLong = myLong;
+        this.placeType=placeType;
     }
 
     public String getName() {
@@ -103,5 +105,13 @@ public class Place {
 
     public void setMyLong(Double myLong) {
         this.myLong = myLong;
+    }
+
+    public String getPlaceType() {
+        return placeType;
+    }
+
+    public void setPlaceType(String placeType) {
+        this.placeType = placeType;
     }
 }

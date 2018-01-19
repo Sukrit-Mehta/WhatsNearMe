@@ -130,18 +130,21 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             latitude=sPref.getFloat("lat",0.1f);
             longitude=sPref.getFloat("long",0.1f);
         }
-//        else {
+       // else {
             lis = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-                    Log.d(TAG, "onLocationChanged: " + latitude+","+longitude);
-//                    latitude=location.getLatitude();
-//                    longitude=location.getLongitude();
-                  /*  if(location==null)
+                    Log.d(TAG, "onLocationChanged: " + location.getLatitude()+","+location.getLongitude());
+                    latitude=location.getLatitude();
+                    longitude=location.getLongitude();
+                    editor.putFloat("lat",(float)latitude);
+                    editor.putFloat("long",(float)longitude);
+                    editor.commit();
+                    if(location==null)
                     {
                         latitude=sPref.getFloat("lat",0.0f);
                         longitude=sPref.getFloat("long",0.0f);
-                    }*/
+                    }
                 }
 
                 @Override
@@ -160,8 +163,8 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                 }
             };
             manager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, 5000, 10, lis);
-        //}
+                    LocationManager.GPS_PROVIDER, 1000, 10, lis);
+       // }
         progressDialog = new ProgressDialog(HomeActivity.this);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -242,6 +245,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                     switch (status.getStatusCode()) {
                         case LocationSettingsStatusCodes.SUCCESS:
                             Log.i(TAG, "All location settings are satisfied.");
+
                             progressDialog.dismiss();
                             break;
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
@@ -278,15 +282,15 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                     return;
                 }
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                        20000, 100, locationListener);
+                        1000, 100, lis);
             } else {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     Log.i("TAG", "Ask for permission");
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                 } else {
                     Log.i("TAG", "Permission given");
-//                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-//                        20000, 100, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                        1000, 100, lis);
                     mGoogleApiClient.connect();
 
                     if (mGoogleApiClient.isConnected()) {

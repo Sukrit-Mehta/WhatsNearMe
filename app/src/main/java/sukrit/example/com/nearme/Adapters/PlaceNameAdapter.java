@@ -2,6 +2,7 @@ package sukrit.example.com.nearme.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,7 +49,69 @@ public class PlaceNameAdapter extends RecyclerView.Adapter<PlaceNameAdapter.Deta
         Place place = placeArrayList.get(position);
         holder.tvName.setText(place.getName());
         holder.tvAddress.setText(place.getVicinity());
-        holder.ivPlaceImage.setImageBitmap(place.getBitmap());
+        //if(place.getBitmap()!=null) {
+            holder.ivPlaceImage.setImageBitmap(place.getBitmap());
+      //  }
+       /* else {
+            switch (place.getPlaceType())
+            {
+                case "atm":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.atm_machine));
+                    break;
+                case "doctor":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.doctor));
+                    break;
+                case "electrician":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.electrician));
+                    break;
+                case "laundry":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.laundry));
+                    break;
+                case "parking":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.parking));
+                    break;
+                case "car_wash":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.car_wash));
+                    break;
+                case "hair_care":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.hair_salon));
+                    break;
+                case "hindu_temple":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.temple));
+                    break;
+                case "stadium":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.stadium));
+                    break;
+                case "mall":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.mall));
+                    break;
+                case "police":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.police));
+                    break;
+                case "plumber":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.plumber));
+                    break;
+                case "post_office":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.post_office));
+                    break;
+                case "restaurant":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.restaurant));
+                    break;
+                case "train_station":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.train));
+                    break;
+                case "taxi_stand":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.taxi));
+                    break;
+                case "bus_station":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.bus_stop));
+                    break;
+                case "airport":
+                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.airport));
+                    break;
+                    default:
+            }
+        }*/
         holder.ratingBar.setRating(place.getRating().floatValue());
         holder.tvOpenNow.setText(String.valueOf(place.getOpenNow()));
         Double dist = CommonMethods.getDistance(place.getMyLat(),place.getMyLong(),place.getLat(),place.getLng(),"K");
@@ -68,6 +131,15 @@ public class PlaceNameAdapter extends RecyclerView.Adapter<PlaceNameAdapter.Deta
                 context.startActivity(intent);
             }
         });
+        if(String.valueOf(place.getOpenNow()).equalsIgnoreCase("true"))
+        {
+            holder.tvOpenNow.setTextColor(Color.parseColor("#3aa83e"));
+            holder.tvOpenNow.setText("Open Now !");
+        }
+        else {
+            holder.tvOpenNow.setTextColor(Color.RED);
+            holder.tvOpenNow.setText("Closed !");
+        }
 
     }
 

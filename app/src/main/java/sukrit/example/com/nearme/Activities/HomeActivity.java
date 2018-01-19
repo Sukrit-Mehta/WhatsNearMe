@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -59,8 +60,8 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
     boolean network_enabled = false;
     boolean locationFound = false;
 
-    static Double latitude;
-    static Double longitude;
+    static double latitude;
+    static double longitude;
     String latStr = "", longStr = "";
 
     public static final Integer REQUEST_CHECK_SETTINGS = 888;
@@ -69,6 +70,10 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
     Toolbar mToolbar;
     SearchView searchView;
+
+    SharedPreferences sPref;
+    SharedPreferences.Editor editor;
+    public static final String MYPREF="MYPREF";
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -85,6 +90,11 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        sPref=getSharedPreferences(MYPREF,MODE_PRIVATE);
+        editor=sPref.edit();
+
+        Log.d(TAG, "onCreate: "+sPref.getFloat("lat",0.1f));
 
         //Toolbar
         mToolbar=findViewById(R.id.main_app_bar);
@@ -108,32 +118,50 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         }
         Location location11 = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-        latitude=location11.getLatitude();
-        longitude=location11.getLongitude();
-        lis= new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                Log.d(TAG, "onLocationChanged:aaja "+location);
-            }
+        if(location11!=null) {
+            latitude = location11.getLatitude();
+            longitude = location11.getLongitude();
+            editor.putFloat("lat",(float)latitude);
+            editor.putFloat("long",(float)longitude);
+            editor.commit();
+            Log.d(TAG, "onCreate: L1: "+latitude+","+longitude);
+     }
+     else {
+            latitude=sPref.getFloat("lat",0.1f);
+            longitude=sPref.getFloat("long",0.1f);
+        }
+//        else {
+            lis = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    Log.d(TAG, "onLocationChanged: " + latitude+","+longitude);
+//                    latitude=location.getLatitude();
+//                    longitude=location.getLongitude();
+                  /*  if(location==null)
+                    {
+                        latitude=sPref.getFloat("lat",0.0f);
+                        longitude=sPref.getFloat("long",0.0f);
+                    }*/
+                }
 
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
+                @Override
+                public void onStatusChanged(String s, int i, Bundle bundle) {
 
-            }
+                }
 
-            @Override
-            public void onProviderEnabled(String s) {
+                @Override
+                public void onProviderEnabled(String s) {
 
-            }
+                }
 
-            @Override
-            public void onProviderDisabled(String s) {
+                @Override
+                public void onProviderDisabled(String s) {
 
-            }
-        };
-        manager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 5000, 10, lis);
-
+                }
+            };
+            manager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, 5000, 10, lis);
+        //}
         progressDialog = new ProgressDialog(HomeActivity.this);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)

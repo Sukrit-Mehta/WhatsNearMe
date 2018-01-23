@@ -54,6 +54,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private static final long INTERVAL = 1000 * 10;
     private static final long FASTEST_INTERVAL = 1000 * 5;
+    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
 
     GoogleApiClient mGoogleApiClient;
     ProgressDialog progressDialog;
@@ -75,7 +76,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
     SharedPreferences.Editor editor;
     public static final String MYPREF="MYPREF";
 
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -83,6 +84,25 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 //    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
             }
+        }
+    }*/
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    Toast.makeText(HomeActivity.this, "Permission Granted", Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    // Permission Denied
+                    Toast.makeText(HomeActivity.this, "Permission Denied", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
@@ -93,6 +113,8 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
         sPref=getSharedPreferences(MYPREF,MODE_PRIVATE);
         editor=sPref.edit();
+
+        requestPermissionsFunc();
 
         Log.d(TAG, "onCreate: "+sPref.getFloat("lat",0.1f));
 
@@ -211,6 +233,15 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 //        et1.setText(String.valueOf(location.getLatitude()));
 //        et2.setText(String.valueOf(location.getLongitude()));
     }
+
+    private void requestPermissionsFunc()
+    {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat
+                    .requestPermissions(HomeActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
+        }
+    }
+
 
     private void fetchLocation() {
 

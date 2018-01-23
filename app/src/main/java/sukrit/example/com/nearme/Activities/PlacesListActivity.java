@@ -1,6 +1,7 @@
 package sukrit.example.com.nearme.Activities;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -56,6 +57,8 @@ public class PlacesListActivity extends AppCompatActivity {
     TextView placeType;
     SearchView searchView;
 
+    SharedPreferences sPref;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -71,6 +74,7 @@ public class PlacesListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places_list);
+
 
         mToolbar=findViewById(R.id.places_app_bar);
         setSupportActionBar(mToolbar);
@@ -98,6 +102,8 @@ public class PlacesListActivity extends AppCompatActivity {
 
         myLat= HomeActivity.latitude;
         myLong= HomeActivity.longitude;
+
+        Log.d(TAG, "onCreate: aaj "+myLat+","+myLong);
 
         tagValue = getIntent().getStringExtra("tagValue");
         placeType.setText(tagValue);
@@ -156,7 +162,9 @@ public class PlacesListActivity extends AppCompatActivity {
             try {
                 Log.d(TAG, "doInBackground: params[0]"+params[0]);
                 //url1=new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=28.6305,77.3721&radius=1000&type="+params[1]+"&sensor=true&key=AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
-                url1=new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+myLat+","+myLong+"&radius=5000&type="+params[1]+"&sensor=true&key=AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
+                //url1=new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+myLat+","+myLong+"&radius=5000&type="+params[1]+"&sensor=true&key=AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
+                url1=new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=28.6305,77.3721&radius=1000&type="+params[1]+"&sensor=true&key=AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
+                Log.d(TAG, "doInBackground: "+myLat+","+myLong);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }

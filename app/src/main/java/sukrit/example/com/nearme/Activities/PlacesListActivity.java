@@ -58,6 +58,8 @@ public class PlacesListActivity extends AppCompatActivity {
     SearchView searchView;
 
     SharedPreferences sPref;
+    int mOnScreenItems,mTotalItemsInList,mPreviousTotal,mFirstVisibleItem,mVisibleThreshold;
+    boolean mLoadingItems=false;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -119,6 +121,35 @@ public class PlacesListActivity extends AppCompatActivity {
         placeNameAdapter = new PlaceNameAdapter(arrayList,PlacesListActivity.this);
         mRecyclerView.setLayoutManager(llm);
         mRecyclerView.setAdapter(placeNameAdapter);
+     /*   mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                mOnScreenItems = mRecyclerView.getChildCount();
+                mTotalItemsInList = llm.getItemCount();
+                mFirstVisibleItem = llm.findFirstVisibleItemPosition();
+
+                if (mLoadingItems) {
+                    if (mTotalItemsInList > mPreviousTotal) {
+                        mLoadingItems = false;
+                        mPreviousTotal = mTotalItemsInList;
+                    }
+                }
+
+                if (!mLoadingItems && (mTotalItemsInList - mOnScreenItems) <= (mFirstVisibleItem + mVisibleThreshold)) {
+                    new DownloadData().execute();
+                    mLoadingItems = true;
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+        });*/
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

@@ -74,7 +74,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
     SharedPreferences sPref;
     SharedPreferences.Editor editor;
-    public static final String MYPREF="MYPREF";
+    public static final String MYPREF = "MYPREF";
 
     /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -93,8 +93,56 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             case REQUEST_CODE_ASK_PERMISSIONS:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
-                    Toast.makeText(HomeActivity.this, "Permission Granted", Toast.LENGTH_SHORT)
-                            .show();
+
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    lis = new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location) {
+                            Log.d(TAG, "onLocationChangedPerm: " + location.getLatitude()+","+location.getLongitude());
+                            latitude=location.getLatitude();
+                            longitude=location.getLongitude();
+                            editor.putFloat("lat",(float)latitude);
+                            editor.putFloat("long",(float)longitude);
+                            editor.commit();
+                            if(location==null)
+                            {
+                                latitude=sPref.getFloat("lat",0.0f);
+                                longitude=sPref.getFloat("long",0.0f);
+                            }
+                        }
+
+                        @Override
+                        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String s) {
+
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String s) {
+
+                        }
+                    };
+                    gridView=findViewById(R.id.gridView);
+                    gridView.setAdapter(new ImageAdapter(HomeActivity.this));
+
+                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    fetchLocation();
+//                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+//                            1000, 100, lis);
+                  //  Toast.makeText(HomeActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
                 } else {
                     // Permission Denied
                     Toast.makeText(HomeActivity.this, "Permission Denied", Toast.LENGTH_SHORT)
@@ -239,6 +287,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat
                     .requestPermissions(HomeActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
+
         }
     }
 
@@ -285,7 +334,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                             try {
                                 // Show the dialog by calling startResolutionForResult(), and check the result
                                 // in onActivityResult().
-                                progressDialog.dismiss();
+//                                progressDialog.dismiss();
                                 status.startResolutionForResult(HomeActivity.this, REQUEST_CHECK_SETTINGS);
                             } catch (IntentSender.SendIntentException e) {
                                 Log.i(TAG, "PendingIntent unable to execute request.");
@@ -322,6 +371,11 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                     Log.i("TAG", "Permission given");
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                         1000, 100, lis);
+                    mGoogleApiClient = new GoogleApiClient.Builder(this)
+                            .addApi(Places.GEO_DATA_API)
+                            .addConnectionCallbacks(this)
+                            .addOnConnectionFailedListener(this)
+                            .build();
                     mGoogleApiClient.connect();
 
                     if (mGoogleApiClient.isConnected()) {

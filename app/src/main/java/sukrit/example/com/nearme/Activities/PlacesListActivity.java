@@ -194,7 +194,7 @@ public class PlacesListActivity extends AppCompatActivity {
                 Log.d(TAG, "doInBackground: params[0]"+params[0]);
                 //url1=new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=28.6305,77.3721&radius=1000&type="+params[1]+"&sensor=true&key=AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
                 //url1=new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+myLat+","+myLong+"&radius=5000&type="+params[1]+"&sensor=true&key=AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
-                url1=new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=28.6305,77.3721&radius=1000&type="+params[1]+"&sensor=true&key=AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
+                url1=new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+myLat+","+myLong+"&radius=1000&type="+params[1]+"&sensor=true&key=AIzaSyBGGC-1ZHbK31cuKwoTQBFmzJKVLOa5GPk");
                 Log.d(TAG, "doInBackground: "+myLat+","+myLong);
             } catch (MalformedURLException e) {
                 e.printStackTrace();

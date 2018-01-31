@@ -12,7 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <Spinner
+<!--    <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sortSpinner"
@@ -26,16 +26,27 @@
             android:text="Sort By:"
             android:textStyle="normal"
             android:textSize="15sp"
-            android:textColor="@android:color/white"/>
-        <TextView
+            android:textColor="@android:color/white"/>-->
+     <!--   <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/placeType"
             android:textStyle="bold"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
-            android:textSize="17sp"
-            android:maxEms="4"/>
+            android:textSize="19sp"
+            android:text="ATM"
+            android:maxEms="4"/>-->
+        <SearchView
+            android:id="@+id/mySearchView"
+            android:icon="@drawable/places_ic_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:iconifiedByDefault="true"
+            android:queryHint="Search from Qur'an"
+            />
+
     </RelativeLayout>
 
 </android.support.v7.widget.Toolbar>

@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     app:titleTextColor="@android:color/white"
     android:background="@color/colorPrimary"
-
     android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
 
 

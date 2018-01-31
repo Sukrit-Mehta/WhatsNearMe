@@ -9,19 +9,10 @@
 
 <include layout="@layout/app_bar_layout_spinner" android:id="@+id/places_app_bar"/>
 
-    <android.support.v7.widget.SearchView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/searchView"
-        android:background="#31e3fd"
-        app:defaultQueryHint="Search"
-        android:layout_below="@id/places_app_bar">
-    </android.support.v7.widget.SearchView>
-
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/searchView"
+        android:layout_below="@+id/places_app_bar"
         android:layout_centerHorizontal="true"
         android:id="@+id/recyclerView"/>-
 

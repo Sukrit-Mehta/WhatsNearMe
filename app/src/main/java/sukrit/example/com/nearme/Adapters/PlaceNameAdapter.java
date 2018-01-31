@@ -49,9 +49,14 @@ public class PlaceNameAdapter extends RecyclerView.Adapter<PlaceNameAdapter.Deta
         Place place = placeArrayList.get(position);
         holder.tvName.setText(place.getName());
         holder.tvAddress.setText(place.getVicinity());
-        //if(place.getBitmap()!=null) {
-            holder.ivPlaceImage.setImageBitmap(place.getBitmap());
-      //  }
+        if(place.getBitmap()!=null) {
+         holder.ivPlaceImage.setImageBitmap(place.getBitmap());
+/*        Picasso.with(context)
+                .load("https://lh4.googleusercontent.com/-1wzlVdxiW14/USSFZnhNqxI/AAAAAAAABGw/YpdANqaoGh4/s1600-w140-h140/Google%2BSydney")
+                .fit()
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(holder.ivPlaceImage);*/
+        }
        /* else {
             switch (place.getPlaceType())
             {

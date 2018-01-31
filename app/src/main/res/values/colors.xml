@@ -4,6 +4,10 @@
     <color name="lightPink">#ff99bb</color>
     <color name="yellow">#ffce00</color>
     <color name="green">#47e200</color>
+    <color name="darkred">#B72101</color>
+    <color name="darkgreen">#48870D</color>
+    <color name="darkblue">#061EC8</color>
+    <color name="lightblack">#4F3F42</color>
 
     <!--  <color name="colorPrimary">#20a7db</color>
   <color name="colorPrimaryDark">#1c96c5</color>-->

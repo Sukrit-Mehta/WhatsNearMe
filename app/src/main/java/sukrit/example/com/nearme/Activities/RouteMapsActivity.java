@@ -43,7 +43,7 @@ public class RouteMapsActivity extends FragmentActivity implements RoutingListen
     private static final String LOG_TAG = "MyActivity";
     protected GoogleApiClient mGoogleApiClient;
     private List<Polyline> polylines;
-    private static final int[] COLORS = new int[]{R.color.green, R.color.yellow, R.color.colorPrimary, R.color.darkPink, R.color.lightPink};
+    private static final int[] COLORS = new int[]{R.color.darkred,R.color.darkgreen, R.color.darkblue,R.color.lightblack};
 
     Double myLat,myLong,placeLat,placeLong;
 
@@ -145,6 +145,13 @@ public class RouteMapsActivity extends FragmentActivity implements RoutingListen
 
         polylines = new ArrayList<>();
         //add route(s) to the map.
+        if(route.size()==1)
+        {
+            Toast.makeText(this, route.size()+" route found.", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(this, route.size() + " routes found.", Toast.LENGTH_SHORT).show();
+        }
         for (int i = 0; i < route.size(); i++) {
 
             //In case of more than 5 alternative routes
@@ -157,8 +164,7 @@ public class RouteMapsActivity extends FragmentActivity implements RoutingListen
             Polyline polyline = map.addPolyline(polyOptions);
 //            progressDialog.dismiss();
             polylines.add(polyline);
-
-            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
         }
         // Start marker
         MarkerOptions options = new MarkerOptions();

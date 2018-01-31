@@ -9,12 +9,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -29,7 +28,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import sukrit.example.com.nearme.Adapters.PlaceNameAdapter;
 import sukrit.example.com.nearme.Models.Place;
@@ -77,38 +75,39 @@ public class PlacesListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places_list);
 
-
         mToolbar=findViewById(R.id.places_app_bar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Near Me");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        searchView=findViewById(R.id.searchView);
+        searchView=(SearchView) findViewById(R.id.mySearchView);
+        tagValue = getIntent().getStringExtra("tagValue");
 
-        placeType=findViewById(R.id.placeType);
+        searchView.setQueryHint("Search from "+tagValue);
 
-        spinner = findViewById(R.id.sortSpinner);
+       // placeType=findViewById(R.id.placeType);
 
-        List<String> categories = new ArrayList<String>();
+      //  spinner = findViewById(R.id.sortSpinner);
+
+     /*   List<String> categories = new ArrayList<String>();
         categories.add("Distance");
-        categories.add("Ratings");
+        categories.add("Ratings");*/
 
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        //ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
 
         // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+     //   dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // attaching data adapter to spinner
-        spinner.setAdapter(dataAdapter);
+     //   spinner.setAdapter(dataAdapter);
 
         myLat= HomeActivity.latitude;
         myLong= HomeActivity.longitude;
 
         Log.d(TAG, "onCreate: aaj "+myLat+","+myLong);
 
-        tagValue = getIntent().getStringExtra("tagValue");
-        placeType.setText(tagValue);
+        //placeType.setText(tagValue);
 
         mRecyclerView = findViewById(R.id.recyclerView);
         progressDialog = new ProgressDialog(PlacesListActivity.this);
@@ -121,37 +120,16 @@ public class PlacesListActivity extends AppCompatActivity {
         placeNameAdapter = new PlaceNameAdapter(arrayList,PlacesListActivity.this);
         mRecyclerView.setLayoutManager(llm);
         mRecyclerView.setAdapter(placeNameAdapter);
-     /*   mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
+        searchView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                mOnScreenItems = mRecyclerView.getChildCount();
-                mTotalItemsInList = llm.getItemCount();
-                mFirstVisibleItem = llm.findFirstVisibleItemPosition();
-
-                if (mLoadingItems) {
-                    if (mTotalItemsInList > mPreviousTotal) {
-                        mLoadingItems = false;
-                        mPreviousTotal = mTotalItemsInList;
-                    }
-                }
-
-                if (!mLoadingItems && (mTotalItemsInList - mOnScreenItems) <= (mFirstVisibleItem + mVisibleThreshold)) {
-                    new DownloadData().execute();
-                    mLoadingItems = true;
-                }
+            public void onClick(View view) {
+                getSupportActionBar().setTitle("");
             }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-        });*/
+        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return true;
@@ -161,6 +139,7 @@ public class PlacesListActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 if(newText!=null && !newText.isEmpty() &&arrayList.size()>0)
                 {
+
                     ArrayList<Place> filteredArrayList = new ArrayList<>();
                     for(int i=0;i<arrayList.size();i++)
                     {
@@ -178,9 +157,6 @@ public class PlacesListActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-
-
     }
 
     public class DownloadData extends AsyncTask<String,Void,ArrayList<Place>>
@@ -269,7 +245,7 @@ public class PlacesListActivity extends AppCompatActivity {
                 //Log.d("TAGGER", "getJson: "+jsonObject);
                 JSONArray jsonArray = jsonObject.getJSONArray("results");
 
-                for(int i=0;i<jsonArray.length();i++) {
+                for(int i=0;i<5;i++) {
                     String name = jsonArray.getJSONObject(i).getString("name");
                     String vicinity = jsonArray.getJSONObject(i).getString("vicinity");
                     Double rating=0.0;

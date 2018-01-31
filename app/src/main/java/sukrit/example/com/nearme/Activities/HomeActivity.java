@@ -95,13 +95,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                     // Permission Granted
 
                     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
                         return;
                     }
                     lis = new LocationListener() {
@@ -200,7 +193,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             latitude=sPref.getFloat("lat",0.1f);
             longitude=sPref.getFloat("long",0.1f);
         }
-       // else {
             lis = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
@@ -234,7 +226,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             };
             manager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, 1000, 10, lis);
-       // }
         progressDialog = new ProgressDialog(HomeActivity.this);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -257,25 +248,8 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         gridView = findViewById(R.id.gridView);
         gridView.setAdapter(imageAdapter);
 
-/*
-        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(HomeActivity.this, findViewById(R.id.button2).getTag().toString(), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(HomeActivity.this, PlacesListActivity.class);
-                startActivity(intent);
-            }
-        });*/
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+              return;
         }
         Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 //        et1.setText(String.valueOf(location.getLatitude()));
@@ -295,9 +269,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
     private void fetchLocation() {
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-       /* progressDialog = new ProgressDialog(HomeActivity.this);
-        progressDialog.setMessage("Fetching your location....");
-        progressDialog.show();*/
         try {
             network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         } catch (Exception e) {
@@ -352,14 +323,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             if (Build.VERSION.SDK_INT < 23) {
 
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
+                  return;
                 }
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                         1000, 100, lis);

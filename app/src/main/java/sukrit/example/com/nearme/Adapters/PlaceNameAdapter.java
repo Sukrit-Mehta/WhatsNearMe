@@ -51,89 +51,39 @@ public class PlaceNameAdapter extends RecyclerView.Adapter<PlaceNameAdapter.Deta
         holder.tvAddress.setText(place.getVicinity());
         if(place.getBitmap()!=null) {
          holder.ivPlaceImage.setImageBitmap(place.getBitmap());
-/*        Picasso.with(context)
+        /*Picasso.with(context)
                 .load("https://lh4.googleusercontent.com/-1wzlVdxiW14/USSFZnhNqxI/AAAAAAAABGw/YpdANqaoGh4/s1600-w140-h140/Google%2BSydney")
                 .fit()
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(holder.ivPlaceImage);*/
         }
-       /* else {
-            switch (place.getPlaceType())
-            {
-                case "atm":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.atm_machine));
-                    break;
-                case "doctor":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.doctor));
-                    break;
-                case "electrician":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.electrician));
-                    break;
-                case "laundry":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.laundry));
-                    break;
-                case "parking":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.parking));
-                    break;
-                case "car_wash":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.car_wash));
-                    break;
-                case "hair_care":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.hair_salon));
-                    break;
-                case "hindu_temple":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.temple));
-                    break;
-                case "stadium":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.stadium));
-                    break;
-                case "mall":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.mall));
-                    break;
-                case "police":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.police));
-                    break;
-                case "plumber":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.plumber));
-                    break;
-                case "post_office":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.post_office));
-                    break;
-                case "restaurant":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.restaurant));
-                    break;
-                case "train_station":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.train));
-                    break;
-                case "taxi_stand":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.taxi));
-                    break;
-                case "bus_station":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.bus_stop));
-                    break;
-                case "airport":
-                    holder.ivPlaceImage.setImageDrawable(context.getResources().getDrawable(R.drawable.airport));
-                    break;
-                    default:
-            }
-        }*/
+
         holder.ratingBar.setRating(place.getRating().floatValue());
         holder.tvOpenNow.setText(String.valueOf(place.getOpenNow()));
         Double dist = CommonMethods.getDistance(place.getMyLat(),place.getMyLong(),place.getLat(),place.getLng(),"K");
-        Double dist1 = Double.valueOf(Math.round(dist * 100));
-        dist1 = dist1 / 100;
+        Double dist1 = Double.valueOf(Math.round(dist * 1000));
+        dist1 = dist1 / 1000;
         Double d = dist1;
         holder.btnDistance.setText(d+" Kms");
+
+        holder.testView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                func(position);
+            }
+        });
+
+       /* holder.btnNavigate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                func(position);
+            }
+        });*/
 
         holder.btnDistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent =new Intent(context,RouteMapsActivity.class);
-                intent.putExtra("myLat",placeArrayList.get(position).getMyLat());
-                intent.putExtra("myLong",placeArrayList.get(position).getMyLong());
-                intent.putExtra("placeLat",placeArrayList.get(position).getLat());
-                intent.putExtra("placeLong",placeArrayList.get(position).getLng());
-                context.startActivity(intent);
+                func(position);
             }
         });
         if(String.valueOf(place.getOpenNow()).equalsIgnoreCase("true"))
@@ -145,17 +95,21 @@ public class PlaceNameAdapter extends RecyclerView.Adapter<PlaceNameAdapter.Deta
             holder.tvOpenNow.setTextColor(Color.RED);
             holder.tvOpenNow.setText("Closed !");
         }
+    }
 
+    void func(int position)
+    {
+        Intent intent =new Intent(context,RouteMapsActivity.class);
+        intent.putExtra("myLat",placeArrayList.get(position).getMyLat());
+        intent.putExtra("myLong",placeArrayList.get(position).getMyLong());
+        intent.putExtra("placeLat",placeArrayList.get(position).getLat());
+        intent.putExtra("placeLong",placeArrayList.get(position).getLng());
+        context.startActivity(intent);
     }
 
     @Override
     public int getItemCount() {
         return placeArrayList.size();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return 0;
     }
 
     public class DetailsItemHolder extends RecyclerView.ViewHolder {
@@ -167,6 +121,7 @@ public class PlaceNameAdapter extends RecyclerView.Adapter<PlaceNameAdapter.Deta
         RatingBar ratingBar;
         Button btnDistance;
         TextView tvOpenNow;
+        ImageView btnNavigate;
 
         public DetailsItemHolder(View itemView) {
             super(itemView);
@@ -177,6 +132,7 @@ public class PlaceNameAdapter extends RecyclerView.Adapter<PlaceNameAdapter.Deta
             ratingBar = itemView.findViewById(R.id.ratingBar);
             tvOpenNow = itemView.findViewById(R.id.tvOpenNowValue);
             btnDistance = itemView.findViewById(R.id.btnDistance);
+            //btnNavigate=itemView.findViewById(R.id.navigate);
             testView = itemView;
         }
 

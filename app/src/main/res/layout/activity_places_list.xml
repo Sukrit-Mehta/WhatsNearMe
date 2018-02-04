@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#31e3fd"
+    android:background="#DCDCDC	"
     tools:context="sukrit.example.com.nearme.Activities.PlacesListActivity">
 
 <include layout="@layout/app_bar_layout_spinner" android:id="@+id/places_app_bar"/>
@@ -14,6 +14,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/places_app_bar"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
         android:id="@+id/recyclerView"/>-
 
 </RelativeLayout>

@@ -4113,14 +4113,17 @@ package sukrit.example.com.nearme.Activities;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -4185,6 +4188,8 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
     SharedPreferences sPref;
     SharedPreferences.Editor editor;
     public static final String MYPREF = "MYPREF";
+    boolean on=false;
+    LocationListener lisNew;
 
     /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -4206,7 +4211,8 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
-                    lis = new LocationListener() {
+                    LocationManager locationManager1 = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    LocationListener locationListener1 = new LocationListener() {
                         @Override
                         public void onLocationChanged(Location location) {
                             Log.d(TAG, "onLocationChangedPerm: " + location.getLatitude()+","+location.getLongitude());
@@ -4229,10 +4235,21 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
                         }
                     };
+
+                    Log.d(TAG, "onRequestPermissionsResult: "+locationManager1);
+                        locationManager1.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener1);
+                        fetchLocation();
+
+                    Log.d(TAG, "onRequestPermissionsResult: "+locationManager1.
+                            getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude()+"");
+                    latitude=locationManager1.
+                            getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
+                    longitude=locationManager1.
+                            getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
+
                     gridView=findViewById(R.id.gridView);
                     gridView.setAdapter(new ImageAdapter(HomeActivity.this));
 
-                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     fetchLocation();
 //                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
 //                            1000, 100, lis);
@@ -4260,6 +4277,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         textView = findViewById(R.id.text);
 
         locationFound = false;
+        manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat
@@ -4267,9 +4285,36 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
         } else {
             //Toolbar
-            manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            on=manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            Log.d(TAG, "onCreate: ON VALUE"+on);
+
+                lisNew = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        latitude=location.getLatitude();
+                        longitude=location.getLongitude();
+                        Log.d(TAG, "onLocationChanged: ON TRUE"+latitude+","+longitude);
+                    }
+
+                    @Override
+                    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String s) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String s) {
+
+                    }
+                };
+                manager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,lisNew);
+
+            /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
@@ -4278,9 +4323,9 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
                 return;
-            }
+            }*/
             Location location11 = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
+            Log.d(TAG, "onCreate: ELSE");
             if (location11 != null) {
                 latitude = location11.getLatitude();
                 longitude = location11.getLongitude();
@@ -4349,11 +4394,29 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        turnGPSOff();
+    }
+
+    private void turnGPSOff(){
+        String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+
+        if(provider.contains("gps")){ //if gps is enabled
+            final Intent poke = new Intent();
+            poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+            poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+            poke.setData(Uri.parse("3"));
+            sendBroadcast(poke);
+        }
+    }
+
     private void fetchLocation() {
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         try {
-            network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            network_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception e) {
 
         }
@@ -4408,16 +4471,16 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                        1000, 100, lis);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                        0, 0, lis);
             } else {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     Log.i("TAG", "Ask for permission");
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                 } else {
                     Log.i("TAG", "Permission given");
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                            1000, 100, lis);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                            0, 0, lis);
                     mGoogleApiClient = new GoogleApiClient.Builder(this)
                             .addApi(Places.GEO_DATA_API)
                             .addConnectionCallbacks(this)

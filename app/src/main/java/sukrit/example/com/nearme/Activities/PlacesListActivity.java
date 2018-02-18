@@ -366,7 +366,7 @@ import sukrit.example.com.nearme.Adapters.PlaceNameAdapter;
 import sukrit.example.com.nearme.Models.Place;
 import sukrit.example.com.nearme.R;
 
-public class PlacesListActivity extends AppCompatActivity {
+public class PlacesListActivity extends AppCompatActivity{
 
     RecyclerView mRecyclerView;
     PlaceNameAdapter placeNameAdapter;
@@ -374,14 +374,14 @@ public class PlacesListActivity extends AppCompatActivity {
     ArrayList<Place> arrayList = new ArrayList<>();
     ArrayList<Place> jsonArray1 = new ArrayList<>();
 
-    String url="";
-    String tagValue="";
+    String url = "";
+    String tagValue = "";
     ProgressDialog progressDialog;
 
     LinearLayoutManager llm;
     public static final String TAG = "locationsettings";
 
-    double myLat,myLong;
+    double myLat, myLong, latt, lng;
     Toolbar mToolbar;
 
     Spinner spinner;
@@ -389,8 +389,8 @@ public class PlacesListActivity extends AppCompatActivity {
     SearchView searchView;
 
     SharedPreferences sPref;
-    int mOnScreenItems,mTotalItemsInList,mPreviousTotal,mFirstVisibleItem,mVisibleThreshold;
-    boolean mLoadingItems=false;
+    int mOnScreenItems, mTotalItemsInList, mPreviousTotal, mFirstVisibleItem, mVisibleThreshold;
+    boolean mLoadingItems = false;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -416,12 +416,20 @@ public class PlacesListActivity extends AppCompatActivity {
         searchView=(SearchView) findViewById(R.id.mySearchView);
         tagValue = getIntent().getStringExtra("tagValue");
 
+        Log.d(TAG, "onCreate: latt "+latt+" , "+lng);
+
         searchView.setQueryHint("Search from "+tagValue);
 
         myLat= HomeActivity.latitude;
         myLong= HomeActivity.longitude;
+        if(myLat<2.9)
+        {
+            myLat=latt;
+            myLong=lng;
+        }
 
-        Log.d(TAG, "onCreate: aaj "+myLat+","+myLong);
+        Log.d(TAG, "onCreate: aaaaa "+myLat+","+myLong);
+
 
         //placeType.setText(tagValue);
 

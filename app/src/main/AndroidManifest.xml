@@ -54,20 +54,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- <intent-filter>
+            <!--
+             <intent-filter>
                  <action android:name="android.intent.action.MAIN" />
 
                  <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>-->
+             </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".Activities.PlacesListActivity"
             android:parentActivityName=".Activities.HomeActivity">
-           <!-- <intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
+
 
             <!--
             <intent-filter>
@@ -92,13 +98,15 @@
         </activity>
         <activity android:name=".Activities.TestingActivity">
 
-            <!--<intent-filter>
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
--->
+            -->
         </activity>
+        <activity android:name=".Activities.loca"></activity>
     </application>
 
 </manifest>

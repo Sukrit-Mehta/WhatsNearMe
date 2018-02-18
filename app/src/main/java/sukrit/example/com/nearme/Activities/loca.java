@@ -7,50 +7,32 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
 
 import sukrit.example.com.nearme.R;
 
-public class TestingActivity extends AppCompatActivity {
+public class loca extends AppCompatActivity {
 
-    LocationManager manager;
-    LocationListener listener;
-    public static final int REQUEST_CODE_ASK_PERMISSIONS = 123;
-    TextView lat, lon;
-    public static final String TAG="TAG";
+    TextView cc;
+    LocationManager locationManager;
+    LocationListener locationListener;
+    Double lat, lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.place_list_item);
+        setContentView(R.layout.activity_loca);
 
-        requestPermissionsFunc();
-        Log.d(TAG, "onCreate: Hello");
-    }
-    private void requestPermissionsFunc()
-    {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat
-                    .requestPermissions(TestingActivity.this,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            REQUEST_CODE_ASK_PERMISSIONS);
-            findLocation();
-        }
-        else {
-            findLocation();
-        }
-    }
-    public void findLocation()
-    {
-        listener = new LocationListener() {
+        cc = findViewById(R.id.loc);
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.d("TAG", "TestingonLocationChanged: " + location.getLatitude() + "," + location.getLongitude());
+                lat = location.getLatitude();
+                lon = location.getLongitude();
             }
 
             @Override
@@ -78,9 +60,8 @@ public class TestingActivity extends AppCompatActivity {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        String prov = LocationManager.NETWORK_PROVIDER;
-        Log.d("TAG", "onCreate: prov = "+prov);
-        manager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        manager.requestLocationUpdates(prov, 0, 0, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 100, locationListener);
+        cc.setText(lat+" , "+lon);
+
     }
 }

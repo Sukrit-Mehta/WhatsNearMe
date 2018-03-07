@@ -7,7 +7,7 @@
     android:background="@android:color/white"
     tools:context="sukrit.example.com.nearme.Activities.HomeActivity">
 
-    <include layout="@layout/app_bar_layout" android:id="@+id/main_app_bar"/>
+    <include layout="@layout/home_app_bar_layout" android:id="@+id/main_app_bar"/>
 
     <GridView
         android:layout_width="match_parent"
